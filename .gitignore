@@ -36,15 +36,6 @@ out/
 ### VS Code ###
 .vscode/
 
-### Documentation and notes (keep in repo but could be removed) ###
-# Uncomment if you want to exclude these files:
-# CORRECTIONS.md
-# RESOLUTION.md
-# STATUS_FINAL.md
-# FIX-403-SWAGGER.txt
-# SWAGGER-FIX.txt
-# README_QUICK.md
-
 ### Environment Variables ###
 .env
 .env.local
@@ -54,6 +45,8 @@ out/
 *.log
 logs/
 *.pid
+*.seed
+*.pid.lock
 
 ### Build artifacts ###
 *.jar
@@ -75,8 +68,9 @@ desktop.ini
 ### Database ###
 *.db
 *.sqlite
+*.sqlite3
 
-### Documentation files (development/internal) ###
+### Documentation files (internal/temporary) ###
 CORRECTIONS.md
 RESOLUTION.md
 STATUS_FINAL.md
@@ -86,18 +80,10 @@ README_QUICK.md
 REPOSITORY_CLEANUP_SUMMARY.md
 CHANGELOG.md
 CONTRIBUTING.md
-*.seed
-*.pid.lock
-
-### Database ###
-*.db
-*.sqlite
-*.sqlite3
-
-### Environment variables ###
-.env
-.env.local
-.env.*.local
+CLEANUP_*.md
+LISEZ-MOI.txt
+PUSH_INSTRUCTIONS.md
+push_to_git.ps1
 
 ### OS ###
 .DS_Store

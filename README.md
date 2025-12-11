@@ -64,13 +64,31 @@ FLUSH PRIVILEGES;
 
 ### 3. Configurer l'application
 
-Modifiez le fichier `src/main/resources/application.properties` avec vos paramètres :
+**Méthode 1 : Utiliser le fichier .env (Recommandé)**
+
+Copiez le fichier `.env.example` en `.env` :
+
+```bash
+# Windows PowerShell
+copy .env.example .env
+
+# Linux/Mac
+cp .env.example .env
+```
+
+Puis éditez le fichier `.env` avec vos paramètres :
 
 ```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/gamematch_db
-spring.datasource.username=gamematch_user
-spring.datasource.password=your_password
+SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3306/gamematch_db
+SPRING_DATASOURCE_USERNAME=gamematch_user
+SPRING_DATASOURCE_PASSWORD=votre_mot_de_passe
 ```
+
+> ⚠️ **Note** : Si vous n'avez pas de mot de passe MySQL, laissez `SPRING_DATASOURCE_PASSWORD` vide
+
+**Méthode 2 : Utiliser application.properties**
+
+Alternativement, modifiez directement `src/main/resources/application.properties` avec vos paramètres
 
 ### 4. Compiler et lancer l'application
 
