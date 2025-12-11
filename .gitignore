@@ -1,4 +1,4 @@
-HELP.md
+### Gradle ###
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
@@ -35,3 +35,46 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Documentation and notes (keep in repo but could be removed) ###
+# Uncomment if you want to exclude these files:
+# CORRECTIONS.md
+# RESOLUTION.md
+# STATUS_FINAL.md
+# FIX-403-SWAGGER.txt
+# SWAGGER-FIX.txt
+# README_QUICK.md
+
+### Application specific ###
+*.log
+logs/
+*.pid
+*.seed
+*.pid.lock
+
+### Database ###
+*.db
+*.sqlite
+*.sqlite3
+
+### Environment variables ###
+.env
+.env.local
+.env.*.local
+
+### OS ###
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+### Backup files ###
+*~
+*.swp
+*.bak
+*.tmp
+*.orig
+
