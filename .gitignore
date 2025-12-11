@@ -45,10 +45,47 @@ out/
 # SWAGGER-FIX.txt
 # README_QUICK.md
 
+### Environment Variables ###
+.env
+.env.local
+.env.*.local
+
 ### Application specific ###
 *.log
 logs/
 *.pid
+
+### Build artifacts ###
+*.jar
+*.war
+*.ear
+!gradle/wrapper/gradle-wrapper.jar
+
+### Temporary files ###
+*.tmp
+*.bak
+*.swp
+*~
+
+### OS specific ###
+.DS_Store
+Thumbs.db
+desktop.ini
+
+### Database ###
+*.db
+*.sqlite
+
+### Documentation files (development/internal) ###
+CORRECTIONS.md
+RESOLUTION.md
+STATUS_FINAL.md
+FIX-403-SWAGGER.txt
+SWAGGER-FIX.txt
+README_QUICK.md
+REPOSITORY_CLEANUP_SUMMARY.md
+CHANGELOG.md
+CONTRIBUTING.md
 *.seed
 *.pid.lock
 
