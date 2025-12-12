@@ -4,25 +4,34 @@ package com.example.backend_gamematch.service;
 import com.example.backend_gamematch.dto.request.LoginRequest;
 import com.example.backend_gamematch.dto.request.RegisterRequest;
 import com.example.backend_gamematch.dto.response.AuthResponse;
+import com.example.backend_gamematch.model.Game;
 import com.example.backend_gamematch.model.User;
+import com.example.backend_gamematch.repository.GameRepository;
 import com.example.backend_gamematch.repository.UserRepository;
 import com.example.backend_gamematch.exception.BadRequestException;
 import com.example.backend_gamematch.exception.ResourceNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class AuthService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder; // à configurer
+    private final GameRepository gameRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public AuthService(UserRepository userRepository,
+                       GameRepository gameRepository,
                        PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.gameRepository = gameRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Transactional
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new BadRequestException("Username already taken");
@@ -42,6 +51,15 @@ public class AuthService {
                 .bio(request.getBio())
                 .discordId(request.getDiscordId())
                 .build();
+
+        // Add favorite games if provided
+        if (request.getFavoriteGameIds() != null && !request.getFavoriteGameIds().isEmpty()) {
+            List<Game> games = gameRepository.findAllById(request.getFavoriteGameIds());
+            if (games.size() != request.getFavoriteGameIds().size()) {
+                throw new ResourceNotFoundException("One or more games not found");
+            }
+            user.getFavoriteGames().addAll(games);
+        }
 
         userRepository.save(user);
 

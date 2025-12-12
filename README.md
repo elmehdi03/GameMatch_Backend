@@ -169,6 +169,39 @@ Content-Type: application/json
 .\test_api.ps1
 ```
 
+## 📱 Intégration Android
+
+Ce backend est conçu pour fonctionner avec une application Android. 
+
+### Configuration rapide
+
+**URL pour émulateur Android :** `http://10.0.2.2:8080/api`  
+**URL pour appareil physique :** `http://VOTRE_IP:8080/api`
+
+### Documentation complète
+
+Consultez les guides détaillés :
+- 📖 **[ANDROID_INTEGRATION.md](ANDROID_INTEGRATION.md)** - Guide complet d'intégration
+- 💻 **[ANDROID_CODE_EXAMPLE.kt](ANDROID_CODE_EXAMPLE.kt)** - Exemples de code Retrofit
+
+### Checklist d'intégration
+
+- ✅ CORS configuré pour `http://10.0.2.2` (émulateur)
+- ✅ Endpoints REST JSON (compatible Retrofit)
+- ✅ Réponses HTTP standards
+- ✅ Documentation Swagger disponible
+
+### Dépendances Android recommandées
+
+```gradle
+// Retrofit pour les appels API
+implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+implementation 'com.squareup.okhttp3:logging-interceptor:4.11.0'
+```
+
+
+
 ## 📁 Structure du projet
 
 ```

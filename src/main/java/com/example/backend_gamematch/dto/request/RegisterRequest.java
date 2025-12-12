@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter @Setter
 public class RegisterRequest {
 
@@ -25,4 +27,5 @@ public class RegisterRequest {
     private String gamemode;
     private String bio;
     private String discordId;
+    private List<Long> favoriteGameIds;
 }
