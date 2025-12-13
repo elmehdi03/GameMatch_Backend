@@ -305,5 +305,24 @@ Pour toute question ou problème d'intégration Android, consultez :
 
 ---
 
+## 🔧 Dernières Corrections (Décembre 2024)
+
+### ✅ Résolution de l'erreur 500 lors de la mise à jour du profil
+
+**Problème corrigé :** `LazyInitializationException` lors de l'accès aux jeux favoris
+
+**Solution appliquée :**
+- Ajout de `Hibernate.initialize()` pour forcer le chargement des collections LAZY
+- Création du DTO `UserProfileResponse` pour une sérialisation propre
+- Ajout de logging détaillé pour faciliter le débogage
+
+**Endpoints affectés :**
+- `GET /api/users/{userId}` - Récupération du profil ✅
+- `PUT /api/users/{userId}` - Mise à jour du profil ✅
+
+**Compatibilité Android :** 100% fonctionnelle
+
+---
+
 **Made with ❤️ for gamers**
 
