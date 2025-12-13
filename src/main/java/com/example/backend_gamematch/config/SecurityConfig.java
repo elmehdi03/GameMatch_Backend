@@ -27,6 +27,10 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**").permitAll()
                         // Health check endpoint
                         .requestMatchers("/health/**").permitAll()
+                        // Games endpoints - public pour faciliter l'integration Android
+                        .requestMatchers("/games/**").permitAll()
+                        // Users endpoints - public pour faciliter l'integration Android
+                        .requestMatchers("/users/**").permitAll()
                         // Swagger et OpenAPI - Accès public complet
                         .requestMatchers(
                                 "/swagger-ui/**",

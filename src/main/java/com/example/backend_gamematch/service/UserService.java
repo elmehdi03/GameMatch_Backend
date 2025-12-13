@@ -1,5 +1,6 @@
 package com.example.backend_gamematch.service;
 
+import com.example.backend_gamematch.dto.request.UpdateProfileRequest;
 import com.example.backend_gamematch.exception.ResourceNotFoundException;
 import com.example.backend_gamematch.model.Game;
 import com.example.backend_gamematch.model.User;
@@ -67,6 +68,38 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         return user.getFavoriteGames();
+    }
+
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    }
+
+    @Transactional
+    public User updateProfile(Long userId, UpdateProfileRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        if (request.getFullname() != null && !request.getFullname().isEmpty()) {
+            user.setFullname(request.getFullname());
+        }
+        if (request.getBio() != null) {
+            user.setBio(request.getBio());
+        }
+        if (request.getCity() != null && !request.getCity().isEmpty()) {
+            user.setCity(request.getCity());
+        }
+        if (request.getDiscordId() != null) {
+            user.setDiscordId(request.getDiscordId());
+        }
+        if (request.getPlaystyle() != null && !request.getPlaystyle().isEmpty()) {
+            user.setPlaystyle(request.getPlaystyle());
+        }
+        if (request.getGamemode() != null && !request.getGamemode().isEmpty()) {
+            user.setGamemode(request.getGamemode());
+        }
+
+        return userRepository.save(user);
     }
 }
 

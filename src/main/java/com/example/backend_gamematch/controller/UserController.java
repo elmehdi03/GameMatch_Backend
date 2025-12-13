@@ -1,6 +1,7 @@
 package com.example.backend_gamematch.controller;
 
 import com.example.backend_gamematch.dto.request.UpdateFavoriteGamesRequest;
+import com.example.backend_gamematch.dto.request.UpdateProfileRequest;
 import com.example.backend_gamematch.model.Game;
 import com.example.backend_gamematch.model.User;
 import com.example.backend_gamematch.service.UserService;
@@ -18,6 +19,19 @@ public class UserController {
 
     public UserController(UserService userService) {
         this.userService = userService;
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<User> getUserById(@PathVariable Long userId) {
+        return ResponseEntity.ok(userService.getUserById(userId));
+    }
+
+    @PutMapping("/{userId}")
+    public ResponseEntity<User> updateProfile(
+            @PathVariable Long userId,
+            @Valid @RequestBody UpdateProfileRequest request) {
+        User user = userService.updateProfile(userId, request);
+        return ResponseEntity.ok(user);
     }
 
     @GetMapping("/{userId}/favorite-games")

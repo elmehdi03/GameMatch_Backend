@@ -85,11 +85,18 @@ CLEANUP_*.md
 LISEZ-MOI.txt
 PUSH_INSTRUCTIONS.md
 push_to_git.ps1
-ANDROID_CODE_EXAMPLE.kt
-ANDROID_INTEGRATION.md
-ANDROID_QUICK_START.md
 test_android_compatibility.ps1
 test_api.ps1
+test_backend.ps1
+quick_test.ps1
+AI_AGENT_BRIEF.md
+ANDROID_*.md
+ANDROID_*.kt
+API_SPECIFICATION.md
+api_specifications.json
+COMPATIBILITY_GUIDE.md
+DECISION_FRONTEND.md
+INTEGRATION_SUMMARY.md
 
 ### OS ###
 .DS_Store

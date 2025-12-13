@@ -4,16 +4,17 @@
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.1-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Une API REST moderne pour la plateforme de mise en relation de joueurs **GameMatch**. Cette application permet aux gamers de créer des profils, de trouver des partenaires de jeu compatibles et de gérer leurs sessions de gaming.
+Une API REST moderne pour la plateforme de mise en relation de joueurs **GameMatch**. Cette application permet aux gamers de créer des profils, choisir leurs jeux favoris, et gérer leurs préférences de jeu.
 
 ## ✨ Fonctionnalités
 
-- 🔐 **Authentification & Autorisation** : Système d'inscription et de connexion sécurisé avec Spring Security
-- 👤 **Gestion des profils** : Création et gestion de profils utilisateurs avec préférences de jeu
-- 🎯 **Matching de joueurs** : Système de mise en relation basé sur les préférences (style de jeu, mode, ville)
-- 📊 **Documentation API interactive** : Interface Swagger UI pour tester l'API
-- 🗄️ **Persistance des données** : Base de données MySQL avec Spring Data JPA
-- ✅ **Validation des données** : Validation automatique des entrées utilisateur
+- 🔐 **Authentification** : Système d'inscription et de connexion sécurisé
+- 👤 **Gestion des profils** : Profils utilisateurs avec préférences (style de jeu, mode, ville, bio, Discord ID)
+- 🎮 **Jeux favoris** : Ajout, modification et suppression de jeux favoris
+- 📊 **Documentation API** : Interface Swagger UI pour tester l'API
+- 🗄️ **Base de données** : Persistance MySQL avec Spring Data JPA
+- ✅ **Validation** : Validation automatique des entrées
+- 📱 **Compatible Android** : CORS configuré pour les applications mobiles
 
 ## 🛠️ Technologies
 
@@ -47,48 +48,29 @@ cd backend_gamematch
 
 ### 2. Configurer la base de données
 
-Créez une base de données MySQL et exécutez le script de création :
-
-```bash
-mysql -u root -p < create_database.sql
-```
-
-Ou créez manuellement la base de données :
+Créez une base de données MySQL nommée `gamematch` :
 
 ```sql
-CREATE DATABASE gamematch_db;
-CREATE USER 'gamematch_user'@'localhost' IDENTIFIED BY 'your_password';
-GRANT ALL PRIVILEGES ON gamematch_db.* TO 'gamematch_user'@'localhost';
-FLUSH PRIVILEGES;
+CREATE DATABASE gamematch;
 ```
 
-### 3. Configurer l'application
+Ou utilisez XAMPP et créez la base via phpMyAdmin.
 
-**Méthode 1 : Utiliser le fichier .env (Recommandé)**
+### 3. Configuration
 
-Copiez le fichier `.env.example` en `.env` :
+Le fichier `application.properties` est déjà configuré pour :
+- MySQL sur `localhost:3306`
+- Base de données : `gamematch`
+- Utilisateur : `root`
+- Pas de mot de passe (configuration XAMPP par défaut)
 
-```bash
-# Windows PowerShell
-copy .env.example .env
-
-# Linux/Mac
-cp .env.example .env
-```
-
-Puis éditez le fichier `.env` avec vos paramètres :
+Si votre configuration MySQL est différente, modifiez `src/main/resources/application.properties` :
 
 ```properties
-SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3306/gamematch_db
-SPRING_DATASOURCE_USERNAME=gamematch_user
-SPRING_DATASOURCE_PASSWORD=votre_mot_de_passe
+spring.datasource.url=jdbc:mysql://localhost:3306/gamematch
+spring.datasource.username=votre_user
+spring.datasource.password=votre_password
 ```
-
-> ⚠️ **Note** : Si vous n'avez pas de mot de passe MySQL, laissez `SPRING_DATASOURCE_PASSWORD` vide
-
-**Méthode 2 : Utiliser application.properties**
-
-Alternativement, modifiez directement `src/main/resources/application.properties` avec vos paramètres
 
 ### 4. Compiler et lancer l'application
 
@@ -114,23 +96,39 @@ Accédez à la documentation interactive de l'API :
 
 ### Endpoints principaux
 
+#### Authentification
 | Méthode | Endpoint | Description |
 |---------|----------|-------------|
-| `POST` | `/api/auth/register` | Créer un nouveau compte utilisateur |
-| `POST` | `/api/auth/login` | Se connecter et obtenir un token |
-| `GET` | `/api/users` | Lister tous les utilisateurs |
-| `GET` | `/api/users/{id}` | Obtenir un utilisateur par ID |
-| `PUT` | `/api/users/{id}` | Mettre à jour un utilisateur |
-| `DELETE` | `/api/users/{id}` | Supprimer un utilisateur |
-| `GET` | `/api/health` | Vérifier l'état de l'application |
+| `POST` | `/api/auth/register` | Créer un compte utilisateur |
+| `POST` | `/api/auth/login` | Se connecter |
+
+#### Jeux
+| Méthode | Endpoint | Description |
+|---------|----------|-------------|
+| `GET` | `/api/games` | Liste tous les jeux disponibles |
+| `POST` | `/api/games` | Ajouter un nouveau jeu |
+
+#### Jeux Favoris
+| Méthode | Endpoint | Description |
+|---------|----------|-------------|
+| `GET` | `/api/users/{userId}/favorite-games` | Voir les jeux favoris d'un utilisateur |
+| `POST` | `/api/users/{userId}/favorite-games` | Ajouter des jeux aux favoris |
+| `PUT` | `/api/users/{userId}/favorite-games` | Remplacer tous les jeux favoris |
+| `DELETE` | `/api/users/{userId}/favorite-games` | Supprimer des jeux des favoris |
+
+#### Santé
+| Méthode | Endpoint | Description |
+|---------|----------|-------------|
+| `GET` | `/api/health` | Vérifier si l'API fonctionne |
+
+Pour plus de détails, consultez **[API_SPECIFICATION.md](API_SPECIFICATION.md)**
 
 ### Exemples de requêtes
 
-#### S'inscrire
+#### S'inscrire avec jeux favoris
 
-```bash
+```json
 POST /api/auth/register
-Content-Type: application/json
 
 {
   "username": "john_doe",
@@ -139,15 +137,15 @@ Content-Type: application/json
   "fullname": "John Doe",
   "city": "Paris",
   "playstyle": "aggressive",
-  "gamemode": "ranked"
+  "gamemode": "ranked",
+  "favoriteGameIds": [1, 2, 3]
 }
 ```
 
 #### Se connecter
 
-```bash
+```json
 POST /api/auth/login
-Content-Type: application/json
 
 {
   "usernameOrEmail": "john_doe",
@@ -157,99 +155,89 @@ Content-Type: application/json
 
 ## 🧪 Tests
 
-### Exécuter les tests unitaires
+### Exécuter les tests
 
 ```bash
+# Windows
 .\gradlew.bat test
+
+# Linux/Mac
+./gradlew test
 ```
 
-### Script de test automatique (Windows)
+### Tester l'API manuellement
 
 ```powershell
-.\test_api.ps1
+# Health check
+Invoke-RestMethod -Uri "http://localhost:8080/api/health" -Method Get
+
+# Get games
+Invoke-RestMethod -Uri "http://localhost:8080/api/games" -Method Get
 ```
 
 ## 📱 Intégration Android
 
-Ce backend est conçu pour fonctionner avec une application Android. 
+Ce backend est **prêt à être utilisé** avec votre application Android.
 
-### Configuration rapide
+### 📖 Guides disponibles
 
-**URL pour émulateur Android :** `http://10.0.2.2:8080/api`  
-**URL pour appareil physique :** `http://VOTRE_IP:8080/api`
+1. **[API_SPECIFICATION.md](API_SPECIFICATION.md)** - Spécification complète de l'API
+2. **[COMPATIBILITY_GUIDE.md](COMPATIBILITY_GUIDE.md)** - Guide de compatibilité Android
+3. **[DECISION_FRONTEND.md](DECISION_FRONTEND.md)** - Faut-il reconstruire ou adapter votre frontend ?
 
-### Documentation complète
+### ⚙️ Configuration
 
-Consultez les guides détaillés :
-- 📖 **[ANDROID_INTEGRATION.md](ANDROID_INTEGRATION.md)** - Guide complet d'intégration
-- 💻 **[ANDROID_CODE_EXAMPLE.kt](ANDROID_CODE_EXAMPLE.kt)** - Exemples de code Retrofit
+**Base URL pour émulateur :** `http://10.0.2.2:8080/api/`  
+**Base URL pour téléphone :** `http://[IP_DE_VOTRE_PC]:8080/api/`
 
-### Checklist d'intégration
+### ✅ Fonctionnalités compatibles Android
 
-- ✅ CORS configuré pour `http://10.0.2.2` (émulateur)
-- ✅ Endpoints REST JSON (compatible Retrofit)
-- ✅ Réponses HTTP standards
-- ✅ Documentation Swagger disponible
-
-### Dépendances Android recommandées
-
-```gradle
-// Retrofit pour les appels API
-implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-implementation 'com.squareup.okhttp3:logging-interceptor:4.11.0'
-```
-
-
+- CORS configuré pour émulateur (`10.0.2.2`)
+- Endpoints REST JSON standard
+- Compatible Retrofit/OkHttp
+- Validation des données côté serveur
 
 ## 📁 Structure du projet
 
 ```
 backend_gamematch/
-├── src/
-│   ├── main/
-│   │   ├── java/com/example/backend_gamematch/
-│   │   │   ├── config/          # Configurations (Security, CORS, Swagger)
-│   │   │   ├── controller/      # Contrôleurs REST
-│   │   │   ├── dto/             # Data Transfer Objects
-│   │   │   ├── exception/       # Gestion des exceptions
-│   │   │   ├── model/           # Entités JPA
-│   │   │   ├── repository/      # Repositories Spring Data
-│   │   │   ├── security/        # Configuration de sécurité
-│   │   │   ├── service/         # Logique métier
-│   │   │   └── BackendGameMatchApplication.java
-│   │   └── resources/
-│   │       └── application.properties
-│   └── test/                    # Tests unitaires et d'intégration
-├── gradle/                      # Gradle Wrapper
-├── build.gradle                 # Configuration Gradle
+├── src/main/java/com/example/backend_gamematch/
+│   ├── config/                 # Configurations (Security, CORS, Swagger)
+│   ├── controller/             # Contrôleurs REST
+│   │   ├── AuthController      # Inscription/Connexion
+│   │   ├── GameController      # Gestion des jeux
+│   │   ├── UserController      # Jeux favoris
+│   │   └── HealthController    # Health check
+│   ├── dto/                    # Data Transfer Objects
+│   │   ├── request/            # RegisterRequest, LoginRequest, etc.
+│   │   └── response/           # AuthResponse
+│   ├── exception/              # Gestion des exceptions
+│   ├── model/                  # Entités JPA (User, Game, Match, etc.)
+│   ├── repository/             # Spring Data JPA Repositories
+│   ├── security/               # UserDetailsService
+│   ├── service/                # Logique métier
+│   │   ├── AuthService         # Authentification
+│   │   └── UserService         # Gestion des jeux favoris
+│   └── BackendGameMatchApplication.java
+├── src/main/resources/
+│   └── application.properties
+├── build.gradle
 ├── .gitignore
-├── LICENSE
 └── README.md
 ```
 
-## 🔧 Configuration
+## 🔧 Configuration avancée
 
-### Fichier application.properties
+### Variables d'environnement
 
-Principales propriétés configurables :
+Le fichier `application.properties` est configuré par défaut pour XAMPP. Pour une configuration personnalisée :
 
 ```properties
-# Port du serveur
+spring.datasource.url=jdbc:mysql://localhost:3306/gamematch
+spring.datasource.username=root
+spring.datasource.password=
 server.port=8080
-
-# Configuration de la base de données
-spring.datasource.url=jdbc:mysql://localhost:3306/gamematch_db
-spring.datasource.username=gamematch_user
-spring.datasource.password=your_password
-
-# Configuration JPA/Hibernate
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=false
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
-
-# Configuration Swagger
-springdoc.swagger-ui.path=/api/swagger-ui.html
+server.servlet.context-path=/api
 springdoc.api-docs.path=/api/v3/api-docs
 ```
 
@@ -281,35 +269,33 @@ kill -9 <PID>
 
 ## 🗺️ Roadmap
 
-- [x] Configuration de base du projet Spring Boot
-- [x] Modèles de données (User, Game, Match, Message)
-- [x] Authentification basique avec Spring Security
+- [x] Configuration Spring Boot
+- [x] Modèles de données (User, Game, Match, Message, Notification)
+- [x] Authentification avec Spring Security
+- [x] Gestion des jeux favoris
 - [x] Documentation Swagger UI
-- [ ] Authentification JWT
-- [ ] Système de matching avancé
-- [ ] WebSockets pour le chat en temps réel
-- [ ] API de gestion des parties
-- [ ] Tests d'intégration complets
-- [ ] Déploiement Docker
-- [ ] CI/CD Pipeline
-
-## 🤝 Contribution
-
-Les contributions sont les bienvenues ! Pour contribuer :
-
-1. Forkez le projet
-2. Créez une branche pour votre fonctionnalité (`git checkout -b feature/AmazingFeature`)
-3. Committez vos changements (`git commit -m 'Add some AmazingFeature'`)
-4. Poussez vers la branche (`git push origin feature/AmazingFeature`)
-5. Ouvrez une Pull Request
+- [x] CORS pour Android
+- [ ] Authentification JWT (actuellement token dummy)
+- [ ] Système de matching utilisateurs
+- [ ] WebSockets pour chat en temps réel
+- [ ] Notifications push
+- [ ] Tests d'intégration
+- [ ] Déploiement (Docker/Cloud)
 
 ## 📄 Licence
 
 Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
 
-## 👥 Auteurs
+## 📞 Support
 
-- Votre nom - Développeur principal
+Pour toute question ou problème d'intégration Android, consultez :
+- **[DECISION_FRONTEND.md](DECISION_FRONTEND.md)** - Guide de décision adapter/reconstruire
+- **[API_SPECIFICATION.md](API_SPECIFICATION.md)** - Documentation complète de l'API
+- **[COMPATIBILITY_GUIDE.md](COMPATIBILITY_GUIDE.md)** - Checklist de compatibilité
+
+---
+
+**Développé avec ☕ et Spring Boot**
 
 ## 🙏 Remerciements
 
