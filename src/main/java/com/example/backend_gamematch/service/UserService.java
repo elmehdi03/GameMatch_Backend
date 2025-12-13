@@ -6,6 +6,7 @@ import com.example.backend_gamematch.model.Game;
 import com.example.backend_gamematch.model.User;
 import com.example.backend_gamematch.repository.GameRepository;
 import com.example.backend_gamematch.repository.UserRepository;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -70,9 +71,13 @@ public class UserService {
         return user.getFavoriteGames();
     }
 
+    @Transactional(readOnly = true)
     public User getUserById(Long userId) {
-        return userRepository.findById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        // Force loading of lazy collection
+        Hibernate.initialize(user.getFavoriteGames());
+        return user;
     }
 
     @Transactional
@@ -99,7 +104,10 @@ public class UserService {
             user.setGamemode(request.getGamemode());
         }
 
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        // Force loading of lazy collection before transaction ends
+        Hibernate.initialize(savedUser.getFavoriteGames());
+        return savedUser;
     }
 }
 
