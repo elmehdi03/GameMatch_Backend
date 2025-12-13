@@ -89,6 +89,9 @@ test_android_compatibility.ps1
 test_api.ps1
 test_backend.ps1
 quick_test.ps1
+test_update_profile.ps1
+simple_test.ps1
+SOLUTION_ERREUR_500.md
 AI_AGENT_BRIEF.md
 ANDROID_*.md
 ANDROID_*.kt
